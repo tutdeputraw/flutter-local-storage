@@ -1,7 +1,7 @@
 part of 'business_logic.dart';
 
 class FileStorage {
-  late String fileName = 'counter.txt';
+  late String fileName = 'latihan.txt';
 
   Future<String> get _localPath async {
     Directory directory = Directory('/storage/emulated/0/Download');
@@ -10,13 +10,13 @@ class FileStorage {
 
   Future<File> get _localFile async {
     final path = await _localPath;
-    return File('$path/$fileName');
+    return File('${path}/$fileName');
   }
 
   Future<bool> delete() async {
     final file = await _localFile;
     if (await isFileExist()) {
-      await file.delete();
+      file.delete();
       return true;
     }
     return false;

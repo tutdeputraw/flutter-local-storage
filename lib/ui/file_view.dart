@@ -1,5 +1,6 @@
 part of 'ui.dart';
 
+
 class FileView extends StatefulWidget {
   final FileStorage storage = FileStorage();
 
@@ -21,11 +22,11 @@ class _FileViewState extends State<FileView> {
     });
   }
 
-  Future<File> _incrementCounter() {
+  Future _incrementCounter() async {
+    var x = await widget.storage.writeCounter(_counter);
     setState(() {
       _counter++;
     });
-    return widget.storage.writeCounter(_counter);
   }
 
   Future delete() async {

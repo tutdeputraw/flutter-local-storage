@@ -3,45 +3,40 @@ part of 'business_logic.dart';
 class FolderStorage {
   String folderName = "Bagus";
 
-  Future<String> get getDirectoryPath async {
+  Future<Directory> get _localPath async {
     Directory directory = Directory('/storage/emulated/0/Download');
-    return directory.path;
+    return directory;
   }
 
-  Future<Directory> get _folder async {
-    final path = await getDirectoryPath;
-    return Directory('$path/$folderName');
+  Future<bool> deleteFolder() async {
+    final Directory _appDocDir = await _localPath;
+    final Directory _appDocDirFolder =
+        Directory('${_appDocDir.path}/$folderName/');
+    _appDocDirFolder.delete(recursive: true);
+    return true;
   }
 
-  Future<bool> delete() async {
-    final folder = await _folder;
-    if (await isDirectoryExist()) {
-      folder.deleteSync(recursive: false);
-      return true;
+  Future<bool> renameFolder(String newName) async {
+    final Directory _appDocDir = await _localPath;
+    final Directory _appDocDirFolder =
+        Directory('${_appDocDir.path}/$folderName/');
+
+    _appDocDirFolder.rename('${_appDocDir.path}/$newName/');
+    folderName = newName;
+    return true;
+  }
+
+  Future<String> createFolderInAppDocDir() async {
+    final Directory _appDocDir = await _localPath;
+    final Directory _appDocDirFolder =
+        Directory('${_appDocDir.path}/$folderName/');
+
+    if (await _appDocDirFolder.exists()) {
+      return _appDocDirFolder.path;
+    } else {
+      final Directory _appDocDirNewFolder =
+          await _appDocDirFolder.create(recursive: true);
+      return _appDocDirNewFolder.path;
     }
-    return false;
-  }
-
-  Future<bool> isDirectoryExist() async {
-    final folder = await _folder;
-    if (await folder.exists()) {
-      return true;
-    }
-    return false;
-  }
-
-  Future<bool> rename(String newFolderName) async {
-    final Directory = await _folder;
-    final path = await getDirectoryPath;
-    if (await isDirectoryExist()) {
-      folderName = newFolderName;
-      Directory.rename(path + '/' + folderName);
-      return true;
-    }
-    return false;
-  }
-
-  Future<Directory> makeFolder() async {
-    return await _folder;
   }
 }

@@ -11,22 +11,21 @@ class _FolderViewState extends State<FolderView> {
   TextEditingController _controller = TextEditingController();
 
   Future _create() async {
-    print('im here');
-    final x = await widget.storage.makeFolder();
+    widget.storage.createFolderInAppDocDir();
+    showSnackBar('success');
   }
 
   Future _delete() async {
-    final x = await widget.storage.delete();
+    widget.storage.deleteFolder();
+    showSnackBar('success');
   }
 
   Future _rename() async {
-    final x = await widget.storage.rename(_controller.text);
+    await widget.storage.renameFolder(_controller.text);
   }
 
-  @override
-  void initState() {
-    widget.storage.makeFolder();
-    super.initState();
+  void showSnackBar(String text) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(text)));
   }
 
   @override
@@ -42,15 +41,22 @@ class _FolderViewState extends State<FolderView> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             ElevatedButton(
-              child: const Text('buat file'),
+              child: const Text('Create Folder'),
               onPressed: _create,
             ),
             ElevatedButton(
-              child: const Text('hapus file'),
+              child: const Text('Delete Folder'),
               onPressed: _delete,
             ),
+            TextFormField(
+              controller: _controller,
+              decoration: const InputDecoration(
+                labelText: 'New Folder Name',
+                border: OutlineInputBorder(),
+              ),
+            ),
             ElevatedButton(
-              child: const Text('rename file'),
+              child: const Text('rename Folder'),
               onPressed: _rename,
             ),
           ],
